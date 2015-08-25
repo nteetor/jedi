@@ -3,7 +3,7 @@
 The jedi R package is intended to help R programmers who work with Salesforce. By using the Force.com REST API, jedi provides a quick, but powerful, way to access Salesforce information. For more details about the Force.com REST API, please following this [link](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm).
 
 ## Authentication Disclaimer
-The following next section, "Understanding Authentication", is borrowed from the [Salesforce API documentation](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_authentication.htm), all credit for it goes to them. Unlike the [RForcecom](https://github.com/hiratake55/RForcecom) package, jedi uses only the Force.com REST API and therefore a connected app must be setup in Salesforce. See the next section for more details.
+The following next section, "Understanding Authentication", is borrowed from the [Salesforce API documentation](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_understanding_authentication.htm), all credit for the content goes to Salesforce. Unlike the [RForcecom](https://github.com/hiratake55/RForcecom) package, jedi uses only the Force.com REST API, not a combination of REST and SOAP, and therefore a connected app must be setup in Salesforce. See the next section for more details.
 
 ## Understanding Authentication
 Salesforce uses the OAuth protocol to allow users of applications to securely access data without having to reveal username and password credentials.
