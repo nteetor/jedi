@@ -1,8 +1,21 @@
 Package: jedi
-Title: What the Package Does (one line, title case)
+Type: package
+Title: Access to Salesforce Using the Force.com REST API
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph)
-Depends: R (>= 3.2.2)
-License: What license is it under?
-LazyData: true
+Authors@R: person("Nathan", "Teetor", email = "nathanteetor@gmail.com", role = c("aut", "cre"))
+Description: The jedi R package is intended to help R programmers who
+  work with Salesforce. By using the Force.com REST API, jedi provides
+  a quick, powerful, way to extract data from Salesforce.
+Depends:
+  R (>= 3.2.2)
+Imports:
+  httr,
+  magrittr,
+  dplyr,
+  stringr
+Suggests:
+  testthat
+License: MIT + file LICENSE
+URL: https://github.com/nteetor/jedi
+BugReports: https://github.com/nteetor/jedi/issues
+
