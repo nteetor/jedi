@@ -4,7 +4,7 @@
 \alias{query}
 \title{Execute a SOQL query}
 \usage{
-query(.conn, query = NULL, get_next = FALSE, verbose = TRUE)
+query(.conn, query, get_next = FALSE)
 }
 \arguments{
 \item{.conn}{A \code{force_api} object.}

@@ -14,8 +14,8 @@
 #'   \code{NA}.
 #'
 #' @export
-query <- function(.conn, query = NULL, get_next = FALSE, verbose = TRUE) {
-  if (.conn %>% inherits('force_api') %>% not) {
+query <- function(.conn, query, get_next = FALSE) {
+  if (!(.conn %>% is.force_api)) {
     stop(paste('cannot query with connection of type', .conn %>% class))
   }
 
@@ -25,6 +25,7 @@ query <- function(.conn, query = NULL, get_next = FALSE, verbose = TRUE) {
 
   base_url <- .conn$base
   sf_version <- .conn$version
+
 
   if (query %>% is.null) {
     query_url <- paste0(base_url, query_more)
