@@ -6,6 +6,9 @@
 \usage{
 authorize(.conn)
 }
+\arguments{
+\item{.conn}{A \code{force_api} object.}
+}
 \description{
 Uses the information stored in a \code{force_api} object to request an access
 token from Salesforce.

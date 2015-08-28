@@ -2,13 +2,17 @@
 % Please edit documentation in R/api-utils.R
 \name{password}
 \alias{password}
+\title{Set password}
 \usage{
-password(.conn, pwd)
+password(.conn, psswd)
 }
 \arguments{
 \item{.conn}{A \code{force_api} object}
 
-\item{pwd}{A character vector, the password concatenated with the security
+\item{psswd}{A character vector, the password concatenated with the security
   token for \code{username}}
+}
+\description{
+Set password
 }
 

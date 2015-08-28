@@ -4,15 +4,15 @@
 \alias{query}
 \title{Execute a SOQL query}
 \usage{
-query(.conn, query, get_next = FALSE)
+query(.conn, qry, get_next = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{.conn}{A \code{force_api} object.}
 
-\item{query}{A character vector SOQL query, see SOQL section below for
+\item{qry}{A character vector SOQL query, see SOQL section below for
 details.}
 
-\item{get_next}{A boolean value indicating that next records urls should be
+\item{get_next}{A boolean value indicating that next records URLs should be
   followed}
 }
 \value{

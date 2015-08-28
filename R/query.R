@@ -4,79 +4,66 @@
 #' too large then a next records url is returned along with the partial results.
 #'
 #' @param .conn A \code{force_api} object.
-#' @param query A character vector SOQL query, see SOQL section below for
+#' @param qry A character vector SOQL query, see SOQL section below for
 #'   details.
-#' @param get_next A boolean value indicating that next records urls should be
+#' @param get_next A boolean value indicating that next records URLs should be
 #'   followed
 #'
 #' @return A list of two values, \code{next_records_url} and \code{results}.
 #'   NOTE, if \code{get_next} is \code{TRUE}, \code{next_records_url} will be
 #'   \code{NA}.
 #'
+#' @importFrom magrittr %>%
+#' @importFrom httr GET content
+#' @importFrom dplyr bind_rows
+#' @importFrom stringr str_replace_all
 #' @export
-query <- function(.conn, query, get_next = FALSE) {
-  if (!(.conn %>% is.force_api)) {
-    stop(paste('cannot query with connection of type', .conn %>% class))
-  }
+query <- function(.conn, qry, get_next = TRUE, verbose = TRUE) {
+  stopifnot(is.force_api(.conn), .conn$is_authorized(), !is.null(query))
 
-  if (query %>% is.null & query_more %>% is.null) {
-    stop('must specify query or query_more')
-  }
+  url <- qry %>%
+    str_replace_all('\\s+', '+') %>%
+    paste0(.conn$base, '/services/data/v', .conn$version, '/query?q=', .)
 
-  base_url <- .conn$base
-  sf_version <- .conn$version
+  query_more(.conn, url, get_next, verbose)
+}
 
+#' @keywords internal
+#' @export
+query_more <- function(.conn, query_url, get_next = TRUE, verbose = TRUE) {
+  if (verbose) message(paste('Querying', query_url))
 
-  if (query %>% is.null) {
-    query_url <- paste0(base_url, query_more)
-  } else {
-    query_url <- query %>%
-      str_replace_all('\\s+', '+') %>%
-      paste0(base_url, '/services/data/v', sf_version, '/query?q=', .)
-  }
-
-  query_response <- query_url %T>%
-    cat('\n') %>%
-    GET(add_headers(Authorization = paste('Bearer', sf_access_token)), verbose())
-
-  tryCatch(
-    stop_for_status(query_response),
-    error = function(e) {
-      error_msg <- query_response %>%
-        content %>%
-        unlist %>%
-        unname
-
-      stop(paste(error_msg, collapse = ' '), call. = FALSE)
-    }
-  )
+  query_response <- .conn$force_VERB('GET', query_url)
 
   suppressWarnings({
-    query_results <- query_response %>%
-      content %>%
-      .[['records']] %>%
-      lapply(function(rec) {
-        unlisted_data <- rec %>% unlist
+    query_results <- dplyr::bind_rows(
+      query_response %>%
+        content %>%
+        .$records %>%
+        lapply(function(rec) {
+          unlisted_data <- rec %>% unlist
 
-        fields <- Filter(function(nm) {
-          nm %>% str_detect('attributes') %>% not
-        }, names(unlisted_data))
+          fields <- Filter(function(nm) {
+            !str_detect(nm, 'attributes')
+          }, names(unlisted_data))
 
-        if (fields %>% length %>% equals(0)) {
-          stop('No valid fields returned by Salesforce')
-        }
+          if (length(fields) == 0) {
+            stop('No valid fields returned by Salesforce')
+          }
 
-        relisted_subset <- append(list(), unlisted_data[fields])
-        df <- data.frame(relisted_subset)
-        colnames(df) %<>% str_replace_all('__r|__c|_', '')
+          relisted_subset <- append(list(), unlisted_data[fields])
+          df <- data.frame(relisted_subset)
+          colnames(df) %<>% str_replace_all('__r|__c|_', '')
 
-        df
-      }) %>%
-      bind_rows
+          df
+      })
+    )
   })
 
-  if ('nextRecordsUrl' %in% (query_response %>% content %>% names)) {
-    query_results %<>% bind_rows(query_salesforce(query_more = content(query_response)[['nextRecordsUrl']]))
+  if (get_next & 'nextRecordsUrl' %in% (query_response %>% content %>% names)) {
+    next_query <- paste0(.conn$base, httr::content(query_response)$nextRecordsUrl)
+
+    query_results <- dplyr::bind_rows(query_results, query_more(.conn, next_query))
   }
 
   query_results

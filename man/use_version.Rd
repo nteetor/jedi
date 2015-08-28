@@ -4,12 +4,12 @@
 \alias{use_version}
 \title{Specify API version}
 \usage{
-use_version(.conn, num)
+use_version(.conn, vrsn)
 }
 \arguments{
 \item{.conn}{A \code{force_api} object}
 
-\item{v}{A character vector specifying the API version number or
+\item{vrsn}{A character vector specifying the API version number or
   \code{"latest"}}
 }
 \value{

@@ -1,5 +1,5 @@
 Package: jedi
-Type: package
+Type: Package
 Title: Access to Salesforce Using the Force.com REST API
 Version: 0.0.0.9000
 Authors@R: person("Nathan", "Teetor", email = "nathanteetor@gmail.com", role = c("aut", "cre"))
@@ -10,6 +10,7 @@ Depends:
   R (>= 3.2.2)
 Imports:
   httr,
+  R6,
   magrittr,
   dplyr,
   stringr
